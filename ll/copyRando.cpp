@@ -1,6 +1,45 @@
 #include "linkedlist.h"
 #include <iostream>
+#include <map>
 #include <vector>
+
+Node *optimal(Node *head) {
+  if (head == nullptr)
+    return nullptr;
+
+  Node *res = new Node(head->val);
+  std::map<Node *, Node *> originalToCopy;
+
+  originalToCopy.insert({head, res});
+
+  Node *tmp = head;
+  Node *ans = res;
+
+  while (tmp != nullptr) {
+    if (tmp->next == nullptr) {
+      ans->next = nullptr;
+    } else if (originalToCopy.find(tmp->next) == originalToCopy.end()) {
+      ans->next = new Node(tmp->next->val);
+      originalToCopy.insert({tmp->next, ans->next});
+    } else {
+      ans->next = originalToCopy.find(tmp->next)->second;
+    }
+
+    if (tmp->random == nullptr) {
+      ans->random = nullptr;
+    } else if (originalToCopy.find(tmp->random) == originalToCopy.end()) {
+      ans->random = new Node(tmp->random->val);
+      originalToCopy.insert({tmp->random, ans->random});
+    } else {
+      ans->random = originalToCopy.find(tmp->random)->second;
+    }
+
+    tmp = tmp->next;
+    ans = ans->next;
+  }
+
+  return res;
+}
 
 Node *copyRandomList(Node *head) {
 
@@ -66,7 +105,7 @@ int main(int argc, char *argv[]) {
 
   node5->random = node1;
 
-  Node *res = copyRandomList(node1);
+  Node *res = optimal(node1);
 
   Node *tmp = node1;
   while (tmp != nullptr) {
