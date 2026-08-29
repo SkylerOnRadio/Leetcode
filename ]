@@ -16,10 +16,10 @@ int dupli(std::vector<int> &nums) {
   int s1 = nums.at(0);
   int fast = nums.at(0);
 
-  do {
+  while (s1 != fast) {
     s1 = nums.at(s1);
     fast = nums.at(nums.at(fast));
-  } while (s1 != fast);
+  }
 
   int s2 = nums.at(0);
 
